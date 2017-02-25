@@ -4,11 +4,31 @@ using System.Linq;
 using System.IO;
 using System.Text;
 
-namespace emotion_sim
+namespace Agents.Model
 {
     class Simulation
     {
+        public Simulation(int actors)
+        {
+            Random rnd = new Random();
+            for (int i = 0; i < actors; i++)
+            {
+                Actors.Add(new Actor(rnd.Next(1, 6)));
+            }
+
+
+            foreach (Actor Actor in Actors)
+            {
+                
+            }
+
+        }
+
         public List<Actor> Actors = new List<Actor>();
+
+
+
+
 
         public void ProcessPeriod(int period)
         {
@@ -33,7 +53,7 @@ namespace emotion_sim
             WritePureStringToFile("sep=;", file);
 
             string temp = "Period;";
-            foreach (Actor Actor in Actors)
+            /*foreach (Actor Actor in Actors)
             {
                 temp += Actor.Name + " Sat"+d;
                 foreach (Demand Demand in Actor.Demands)
@@ -56,7 +76,7 @@ namespace emotion_sim
 
                 }
                 WritePureStringToFile(temp, file);
-            }
+            }*/
 
         }
 

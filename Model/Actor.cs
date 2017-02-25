@@ -2,43 +2,46 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
-namespace emotion_sim
+
+namespace Agents.Model
 {
     class Actor
     {
-        public Actor()
+        public Actor(int level)
         {
+            Level = level;
             //Demands = new List<Demand>();
         }
-        /// <summary>
-        /// Type of the actor: person or group
-        /// </summary>
-        public string Type;
 
+        /*
         /// <summary>
         /// Name of the actor
         /// </summary>
-        public string Name;
+        ///public string Name;
         
-        /// <summary>
-        ///  Satisfaction of demamd - emotional satisfaction coefficient
-        /// </summary>
-        public double EmotionCoefficient;
-
         /// <summary>
         /// Current level of emotional satisfaction
         /// </summary>
-        public double[] Satisfaction = new double[100];
+        public List<double> Satisfaction = new List<double>();
 
         public List<Demand> Demands = new List<Demand>();
+        */
 
-        //public Dictionary<Demand, Func<double, double>> Outputs = new Dictionary<Demand, Func<double, double>>();
+        [Range(1, 5)]
+        public int Level;
+
+        public List<Relationship> Agents = new List<Relationship>();
+
+        public List<Relationship> Principals = new List<Relationship>();
 
         public void ProcessPeriod(int period)
-        {            
-        }
+        {
+            //double a = Satisfaction.Last();
 
+        }
 
     }
 }

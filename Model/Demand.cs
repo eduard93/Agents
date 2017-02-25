@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace emotion_sim
+namespace Agents.Model
 {
     class Demand
     {
