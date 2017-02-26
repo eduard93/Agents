@@ -37,12 +37,13 @@ namespace Agents.Model
         /// 1 - max, 5 - lowest level 
         public int Level;
 
+        [JsonIgnore]
         public List<Relationship> Agents = new List<Relationship>();
 
-        public bool ShouldSerializeAgents()
+        /*public bool ShouldSerializeAgents()
         {
             return Agents.Count > 0;
-        }
+        }*/
 
         [JsonIgnore]
         public List<Relationship> Principals = new List<Relationship>();

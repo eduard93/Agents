@@ -33,6 +33,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Msagl">
+      <HintPath>..\..\automatic-graph-layout\GraphLayout\Drawing\bin\Debug\Microsoft.Msagl.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Msagl.Drawing">
+      <HintPath>..\..\automatic-graph-layout\GraphLayout\Drawing\bin\Debug\Microsoft.Msagl.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Msagl.GraphViewerGdi">
+      <HintPath>..\..\automatic-graph-layout\GraphLayout\tools\GraphViewerGDI\bin\Debug\Microsoft.Msagl.GraphViewerGdi.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -62,9 +71,11 @@
     <Compile Include="Model\Message.cs" />
     <Compile Include="Model\Period.cs" />
     <Compile Include="Model\Relationship.cs" />
+    <Compile Include="Model\Status.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Simulation.cs" />
+    <Compile Include="Utils\Display.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\Log.cs" />
     <Compile Include="Utils\Rnd.cs" />

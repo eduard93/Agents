@@ -22,7 +22,7 @@ namespace Agents.Model
 
         public Message Parent;
 
-        public String Status = "CREATED";
+        public Status Status = Status.Created;
 
         public List<Message> Children = new List<Message>();
     }

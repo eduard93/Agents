@@ -4,11 +4,18 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using Agents.Utils;
+using Microsoft.Msagl.Drawing;
 
 namespace Agents.Model
 {
     public class Simulation
     {
+        public List<Actor> Actors = new List<Actor>();
+
+        public List<Message> Messages = new List<Message>();
+
+        public List<Relationship> Relationships = new List<Relationship>();
+
         public Simulation(int actors)
         {
             if (actors<5)
@@ -42,32 +49,30 @@ namespace Agents.Model
                     {
                         Actor Principal = Actors.PickRandomPrincipal(Actor);
                         int ImportanceActor = Rnd.GetRandomNumber(PrincipalPoints);
-                        new Relationship(Principal, Actor, 2 * ImportanceActor);
+                        Relationships.Add(new Relationship(Principal, Actor, 2 * ImportanceActor));
                         PrincipalPoints -= ImportanceActor;
                     }
                 }
 
-                /*if (Actor.Level < 5)
-                {
-                    int AgentPoints = 10;
-
-                    while (AgentPoints > 0)
-                    {
-                        Actor Agent = Actors.PickRandomAgent(Actor);
-                        int ImportanceActor = rnd.Next(1, AgentPoints + 1);
-                        new Relationship(Actor, Agent, ImportanceActor);
-                        AgentPoints -= ImportanceActor;
-                    }
-                }*/
-
-
             }
 
         }
+        public Graph ToGraph()
+        {
+            Graph graph = new Graph("graph");
 
-        public List<Actor> Actors = new List<Actor>();
+            //  graph.AddEdge("A", "B");
+            foreach (Actor Actor in Actors)
+            {
+                foreach (Relationship AgentRel in Actor.Agents)
+                {
+                    graph.AddEdge(Actor.Name, AgentRel.Agent.Name);
+                }
+            }
 
-        public List<Message> Messages = new List<Message>();
+            return graph;
+        }
+
 
 
 
