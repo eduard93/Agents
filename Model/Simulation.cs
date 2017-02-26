@@ -3,23 +3,64 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text;
+using Agents.Utils;
 
 namespace Agents.Model
 {
-    class Simulation
+    public class Simulation
     {
         public Simulation(int actors)
         {
-            Random rnd = new Random();
-            for (int i = 0; i < actors; i++)
+            if (actors<5)
             {
-                Actors.Add(new Actor(rnd.Next(1, 6)));
+                actors = 5;
             }
 
+            for (int i = 1; i <= actors; i++)
+            {
+                int level = 5;
+                if (i <= 5)
+                {
+                    level = i;
+                }
+                else
+                {
+                    level = Rnd.GetRandomLevel();
+                }
+                Actors.Add(new Actor(level, "Actor "+i.ToString()));
+            }
 
+            
+            //P
             foreach (Actor Actor in Actors)
             {
-                
+                if (Actor.Level > 1)
+                {
+                    int PrincipalPoints = 5;
+
+                    while (PrincipalPoints > 0)
+                    {
+                        Actor Principal = Actors.PickRandomPrincipal(Actor);
+                        int ImportanceActor = Rnd.GetRandomNumber(PrincipalPoints);
+                        new Relationship(Principal, Actor, 2 * ImportanceActor);
+                        PrincipalPoints -= ImportanceActor;
+                    }
+                }
+
+                /*if (Actor.Level < 5)
+                {
+                    int AgentPoints = 10;
+
+                    while (AgentPoints > 0)
+                    {
+                        Actor Agent = Actors.PickRandomAgent(Actor);
+                        int ImportanceActor = rnd.Next(1, AgentPoints + 1);
+                        new Relationship(Actor, Agent, ImportanceActor);
+                        AgentPoints -= ImportanceActor;
+                    }
+                }*/
+
+
             }
 
         }

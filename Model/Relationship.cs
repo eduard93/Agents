@@ -8,30 +8,39 @@ using System.ComponentModel;
 
 namespace Agents.Model
 {
-    class Relationship
+    public class Relationship
     {
-        public Relationship(Actor principal, Actor agent, double importanceAgent, double importancePrincipal)
+        public Relationship(Actor principal, Actor agent, double importanceAgent, double importancePrincipal = 1)
         {
-            Principal = principal;
-            Agent = agent;
-            ImportanceAgent = importanceAgent;
-            ImportancePrincipal = importancePrincipal;
+            Relationship Relationship = principal.Agents.Find(item => (item.Principal == principal) && (item.Agent == agent));
 
-            Principal.Agents.Add(this);
-            Agent.Principals.Add(this);
+            if (Relationship == null)
+            {
+                Principal = principal;
+                Agent = agent;
+                ImportanceAgent = importanceAgent;
+                ImportancePrincipal = importancePrincipal;
+
+                Principal.Agents.Add(this);
+                Agent.Principals.Add(this);
+            } else
+            {
+                Relationship.ImportanceAgent += importanceAgent;
+                Relationship.ImportancePrincipal += ImportancePrincipal;
+            }
         }
 
         public Actor Principal;
 
         public Actor Agent;
 
-        [Range(0, 1)]
+        [Range(1, 10)]
         /// <summary>
         /// Importance of a relationship to an agent
         /// </summary>
         public double ImportanceAgent;
 
-        [Range(0, 1)]
+        [Range(1, 10)]
         /// <summary>
         /// Importance of a relationship to a principal
         /// </summary>
