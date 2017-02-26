@@ -67,7 +67,7 @@ namespace Agents.Model
 
         public List<Actor> Actors = new List<Actor>();
 
-
+        public List<Message> Messages = new List<Message>();
 
 
 
