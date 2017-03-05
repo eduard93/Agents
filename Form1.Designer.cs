@@ -38,7 +38,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(62, 175);
+            this.button1.Location = new System.Drawing.Point(116, 175);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
@@ -68,13 +68,18 @@
             // numericUpDown1
             // 
             this.numericUpDown1.Location = new System.Drawing.Point(12, 175);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            -1486618624,
+            232830643,
+            0,
+            0});
             this.numericUpDown1.Minimum = new decimal(new int[] {
             10,
             0,
             0,
             0});
             this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDown1.Size = new System.Drawing.Size(98, 20);
             this.numericUpDown1.TabIndex = 3;
             this.numericUpDown1.Value = new decimal(new int[] {
             15,

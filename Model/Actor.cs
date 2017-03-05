@@ -48,7 +48,7 @@ namespace Agents.Model
         [JsonIgnore]
         public List<Relationship> Principals = new List<Relationship>();
 
-        public void ProcessPeriod(int period)
+        public void ProcessPeriod(int period, IEnumerable<Message> messages)
         {
             //double a = Satisfaction.Last();
 

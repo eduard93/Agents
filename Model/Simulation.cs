@@ -16,7 +16,7 @@ namespace Agents.Model
 
         public List<Relationship> Relationships = new List<Relationship>();
 
-        public Simulation(int actors)
+        public Simulation(int actors, int messages = 5)
         {
             if (actors<5)
             {
@@ -53,10 +53,34 @@ namespace Agents.Model
                         PrincipalPoints -= ImportanceActor;
                     }
                 }
-
             }
 
+            for (int i = 0; i < messages; i++)
+            {
+                Actor Principal = Actors.PickRandomActor(1);
+                Actor Agent = Actors.PickRandomAgent(Principal);
+                Messages.Add(Message.CreateRandom(Principal, Agent));
+            }
         }
+
+        public void ProcessPeriod(int period)
+        {
+            foreach (Actor Actor in Actors)
+            {
+                Actor.ProcessPeriod(period, Messages.ActiveMessages(Actor));
+            }
+        }
+
+        public void ProcessSimulation(int period)
+        {
+            for (int i = 0; i < period; i++)
+            {
+                ProcessPeriod(i);
+            }
+        }
+
+        #region Utils
+
         public Graph ToGraph()
         {
             Graph graph = new Graph("graph");
@@ -76,21 +100,7 @@ namespace Agents.Model
 
 
 
-        public void ProcessPeriod(int period)
-        {
-            foreach (Actor Actor in Actors)
-            {
-                Actor.ProcessPeriod(period);
-            }
-        }
 
-        public void ProcessSimulation(int period)
-        {
-            for (int i = 0; i < period; i++)
-            {
-                ProcessPeriod(i);
-            }
-        }
 
         public void ToCSV(int period, string file)
         {
@@ -133,6 +143,7 @@ namespace Agents.Model
                 tw.WriteLine(text);
             }
         }
+        #endregion
 
 
     }

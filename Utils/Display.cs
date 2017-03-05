@@ -6,7 +6,11 @@ namespace Agents.Utils
 {
     public class Display
     {
-
+        /// <summary>
+        /// Create new form showing simulation.
+        /// Shows agents and relashionships between them.
+        /// </summary>
+        /// <param name="simulation">Simulation to display</param>
         public static void DisplaySimulation(Simulation simulation)
         {
             //create a form 

@@ -40,5 +40,15 @@ namespace Agents.Utils
             int AgentLevel = current.Level + 1;
             return source.Where(item => item.Level == AgentLevel).PickRandom(current);
         }
+
+        public static T PickRandomActor<T>(this IEnumerable<T> source, int level) where T : Actor
+        {
+            return source.Where(item => item.Level == level).PickRandom();
+        }
+
+        public static IEnumerable<T> ActiveMessages<T>(this IEnumerable<T> source, Actor actor) where T : Message
+        {
+            return source.Where(item => item.Receiver == actor && (item.Status == Status.Created || item.Status == Status.InWork));
+        }
     }
 }
