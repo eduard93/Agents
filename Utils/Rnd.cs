@@ -8,7 +8,7 @@ namespace Agents.Utils
 {
     public static class Rnd
     {
-        public static readonly Random rnd = new Random();
+        private static readonly Random rnd = new Random();
 
         public static int GetRandomNumber(int min, int max)
         {
@@ -18,6 +18,16 @@ namespace Agents.Utils
         public static int GetRandomNumber(int max)
         {
             return GetRandomNumber(1, max);
+        }
+
+        /// <summary>
+        /// Get random boolean
+        /// </summary>
+        /// <param name="probability">Probability, that returntd bool is true</param>
+        /// <returns></returns>
+        public static bool GetRandomBool(int probability = 50)
+        {
+            return GetRandomNumber(0, 99) < probability;
         }
 
         public static int GetRandomLevel()

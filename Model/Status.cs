@@ -10,7 +10,9 @@ namespace Agents.Model
     {
         Discarded = -1,
         Created = 0,
+        Accepted = 1,
         InWork = 2,
-        Completed = 3        
+        Delegated = 3,
+        Completed = 4       
     }
 }

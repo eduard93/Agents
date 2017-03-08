@@ -36,5 +36,10 @@ namespace Agents
         {
             Display.DisplaySimulation(Simulation);
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Simulation.ProcessSimulation(10);
+        }
     }
 }

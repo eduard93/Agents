@@ -40,18 +40,173 @@ namespace Agents.Model
         [JsonIgnore]
         public List<Relationship> Agents = new List<Relationship>();
 
-        /*public bool ShouldSerializeAgents()
-        {
-            return Agents.Count > 0;
-        }*/
-
         [JsonIgnore]
         public List<Relationship> Principals = new List<Relationship>();
 
-        public void ProcessPeriod(int period, IEnumerable<Message> messages)
+        public void ProcessPeriod(int period, List<Message> messages)
         {
+           
+            double workAvailable = GetWorkAvailable(period);
+            IEnumerable<Message> activeMessages = OrderActiveMessages(messages.ActiveMessages(this));
+
+            foreach (Message message in activeMessages)
+            {
+                if (message.Status == Status.Created)
+                {
+                    workAvailable -= InitialProcessing(period, workAvailable, message, messages);
+                    if (workAvailable <= 0) break;
+                }
+
+                workAvailable -= ProcessMessage(period, workAvailable, message);
+                if (workAvailable<=0) break;
+
+            }
+
             //double a = Satisfaction.Last();
 
+        }
+
+        /// <summary>
+        /// Either do work on a message or check if delegates are complete
+        /// TODO discard in a middle of work
+        /// </summary>
+        /// <param name="period">Current period</param>
+        /// <param name="workAvailable">Amount of work actor currently able to perform</param>
+        /// <param name="message">Current message</param>
+        /// <returns>Work spent on current message</returns>
+        private double ProcessMessage(int period, double workAvailable, Message message)
+        {
+            double workSpent = 0;
+
+            // First time agents works on a message
+            if (message.Status == Status.Accepted)
+            {
+                message.Status = Status.InWork;
+                message.Begin = period;
+            }
+
+            if (message.Status == Status.InWork)
+            { 
+
+                // we can do everything right now
+                if (message.AmountLeft <= workAvailable)
+                {
+                    workSpent = message.AmountLeft;
+                    message.AmountDone += workSpent;
+
+                    message.MarkComplete(period);
+                } else
+                {
+                    // we can't do everything now '
+                    workSpent = workAvailable;
+                    message.AmountDone += workAvailable;
+                    
+                }
+            }  else if (message.Status == Status.Delegated)
+            {
+                if (message.IsDelegatedCompleted())
+                {
+                    // Spend the rest of the period finalizing work on delegated message
+                    message.AmountDone += workAvailable;
+                    workAvailable = 0;
+
+                    message.MarkComplete(period);
+                }
+            }
+
+            // fix for any wrong computation
+            if (workAvailable < workSpent)
+            {
+                workSpent = workAvailable;
+            }
+            return workSpent;
+        }
+
+
+        /// <summary>
+        /// We can:
+        /// - Discard
+        /// - Delegate
+        /// - Do work on it
+        /// </summary>
+        /// <param name="period">Current period</param>
+        /// <param name="workAvailable">Amount of work actor currently able to perform</param>
+        /// <param name="message">Current message</param>
+        /// <param name="messages">All messages in a simulation</param>
+        /// <returns></returns>
+        private double InitialProcessing(int period, double workAvailable, Message message, List<Message> messages)
+        {
+            double workSpent = 0;
+
+            // Can move mesasge status to Accepted, Discarded, Delegated
+            InitialRouteMessage(message);
+
+
+            if (message.Status == Status.Delegated)
+            {
+                workSpent = 0.3;
+            } else
+            {
+                workSpent = 0.1;
+            }
+
+            // fix for any wrong computation
+            if (workAvailable < workSpent)
+            {
+                workSpent = workAvailable;
+            }
+            return workSpent;
+        }
+
+        /// <summary>
+        /// Set mesasge status to Accepted, Discarded, Delegated
+        /// </summary>
+        /// <param name="message"></param>
+        private void InitialRouteMessage(Message message)
+        {
+            // acceptmessage with a probability of 95%
+            if (Rnd.GetRandomBool(95))
+            {
+                if (Agents.Count == 0)
+                {
+                    message.Status = Status.Accepted;
+                }
+                else
+                {
+                    // Delegate with probability of 80%
+                    if (Rnd.GetRandomBool(0))
+                    {
+                        message.Status = Status.Delegated;
+                    }
+                    else
+                    {
+                        message.Status = Status.Accepted;
+                    }
+                }
+            } else
+            {
+                message.Status = Status.Discarded;
+            }
+        }
+
+        /// <summary>
+        /// Work actor can perform during this period
+        /// TODO tie to motivation, etc
+        /// </summary>
+        public double GetWorkAvailable(int period)
+        {
+            return 1;
+        }
+
+        /// <summary>
+        /// Sort incoming active messages from most important to least
+        /// </summary>
+        /// <typeparam name="T">Currently messages</typeparam>
+        /// <param name="source">Messages to sort</param>
+        /// <returns></returns>
+        public IEnumerable<T> OrderActiveMessages<T>(IEnumerable<T> source) where T: Message
+        {
+            return source.OrderByDescending(item => item.Importance);
         }
 
     }

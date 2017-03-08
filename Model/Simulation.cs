@@ -67,7 +67,7 @@ namespace Agents.Model
         {
             foreach (Actor Actor in Actors)
             {
-                Actor.ProcessPeriod(period, Messages.ActiveMessages(Actor));
+                Actor.ProcessPeriod(period, Messages);
             }
         }
 

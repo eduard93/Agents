@@ -48,7 +48,7 @@ namespace Agents.Utils
 
         public static IEnumerable<T> ActiveMessages<T>(this IEnumerable<T> source, Actor actor) where T : Message
         {
-            return source.Where(item => item.Receiver == actor && (item.Status == Status.Created || item.Status == Status.InWork));
+            return source.Where(item => item.Receiver == actor && (item.Status == Status.Created || item.Status == Status.Accepted || item.Status == Status.InWork || item.Status == Status.Delegated));
         }
     }
 }

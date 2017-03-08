@@ -17,7 +17,7 @@ namespace Agents.Model
         /// <summary>
         /// Period in which message was created
         /// </summary>
-        public int Start;
+        public int Create;
 
         /// <summary>
         /// Period, in which work started on message
@@ -37,13 +37,17 @@ namespace Agents.Model
         /// <summary>
         /// Number of periods required to finish the task
         /// </summary>
-        public int Amount;
+        public double Amount;
 
         /// <summary>
-        /// Current status of completion from  0 to 1
+        /// Number of periods done to finish the task
         /// </summary>
-        [Range(0, 1)]
-        public double Completion = 0;
+        public double AmountDone = 0;
+
+        /// <summary>
+        /// Number of periods left to finish the task
+        /// </summary>
+        public double AmountLeft { get { return Amount - AmountDone; } }
 
         /// <summary>
         /// Importance in the mind of Sender
@@ -57,33 +61,44 @@ namespace Agents.Model
 
         public List<Message> Children = new List<Message>();
 
-        public Message(Actor sender, Actor receiver, double importance, int start, int end, int amount)
+        public Message(Actor sender, Actor receiver, double importance, int create, int end, int amount)
         {
             Sender = sender;
             Receiver = receiver;
             Importance = importance;
-            Start = start;
+            Create = create;
             End = end;
             Amount = amount;
         }
 
-        public Message(Actor receiver, double importance, int start, int end, int amount)
+        public Message(Actor receiver, double importance, int create, int end, int amount)
         {
             Receiver = receiver;
             Importance = importance;
-            Start = start;
+            Create = create;
             End = end;
             Amount = amount;
         }
 
-        public static Message CreateRandom(Actor sender, Actor receiver, int start=0)
+        public static Message CreateRandom(Actor sender, Actor receiver, int create= 0)
         {
             double importance = Rnd.GetRandomNumber(100)/100;
             int amount = Rnd.GetRandomNumber(10);
-            int end = start + amount + Rnd.GetRandomNumber(10);
+            int end = create + amount + Rnd.GetRandomNumber(10);
 
-            Message Message = new Message(sender, receiver, importance, start, end, amount);
+            Message Message = new Message(sender, receiver, importance, create, end, amount);
             return Message;
+        }
+
+        public bool IsDelegatedCompleted()
+        {
+            return Children.All(message => (message.Status == Status.Completed) || (message.Status == Status.Discarded));
+        }
+
+        public void MarkComplete(int period)
+        {
+            Status = Status.Completed;
+            EndReal = period;
         }
     }
 }
