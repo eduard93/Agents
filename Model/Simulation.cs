@@ -16,6 +16,8 @@ namespace Agents.Model
 
         public List<Relationship> Relationships = new List<Relationship>();
 
+        public string LogFile = @"D:\C#_projects\Agents\Agents\1.csv";
+
         public Simulation(int actors, int messages = 5)
         {
             if (actors<5)
@@ -61,10 +63,17 @@ namespace Agents.Model
                 Actor Agent = Actors.PickRandomAgent(Principal);
                 Messages.Add(Message.CreateRandom(Principal, Agent));
             }
+
+            File.WriteAllText(LogFile, String.Empty);
+            string log = Log.SimulationMessageInfoCSV();
+            AddToLog(log);
+            
         }
 
         public void ProcessPeriod(int period)
         {
+            string log = Log.SimulationMessageInfoCSV(this);
+            AddToLog(log);
             foreach (Actor Actor in Actors)
             {
                 Actor.ProcessPeriod(period, Messages);
@@ -143,6 +152,16 @@ namespace Agents.Model
                 tw.WriteLine(text);
             }
         }
+
+
+        public void AddToLog(string text)
+        {
+            using (TextWriter tw = new StreamWriter(@LogFile, true))
+            {
+                tw.WriteLine(text);
+            }
+        }
+
         #endregion
 
 

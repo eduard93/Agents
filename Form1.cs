@@ -24,6 +24,7 @@ namespace Agents
 
             textBox1.AppendText(Log.SimulationUserInfo(Simulation));
             textBox1.AppendText("Time: " + watch.ElapsedMilliseconds+ " ms");
+            textBox1.AppendText(Environment.NewLine);
 
             /*JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.MaxDepth = 2;
@@ -40,6 +41,7 @@ namespace Agents
         private void button3_Click(object sender, EventArgs e)
         {
             Simulation.ProcessSimulation(10);
+            textBox1.AppendText(Log.SimulationMessageInfo(Simulation));
         }
     }
 }

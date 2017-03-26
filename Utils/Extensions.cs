@@ -41,6 +41,11 @@ namespace Agents.Utils
             return source.Where(item => item.Level == AgentLevel).PickRandom(current);
         }
 
+        public static IEnumerable<T> PickRandomAgents<T>(this IEnumerable<T> source, int count) where T : Relationship
+        {
+            return source.Shuffle().Take(count);
+        }
+
         public static T PickRandomActor<T>(this IEnumerable<T> source, int level) where T : Actor
         {
             return source.Where(item => item.Level == level).PickRandom();

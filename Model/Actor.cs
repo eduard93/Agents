@@ -144,6 +144,7 @@ namespace Agents.Model
 
             if (message.Status == Status.Delegated)
             {
+                DelegateMessage(period, message, messages);
                 workSpent = 0.3;
             } else
             {
@@ -158,6 +159,48 @@ namespace Agents.Model
             return workSpent;
         }
 
+        private void DelegateMessage(int period, Message message, List<Message> messages)
+        {
+            int maxParts = Agents.Count;
+            int parts = CalculateDelegationParts(message, maxParts);
+            double amount = message.Amount / parts;
+            int end = CalculateChilrenEnd(period, message, amount);
+
+            foreach (Relationship rel in Agents.PickRandomAgents(parts))
+            {
+                Message newMsg = new Message(this, rel.Agent, message.Importance, period, end, amount);
+                messages.Add(newMsg);
+                newMsg.Parent = message;
+                message.Children.Add(newMsg);
+            }
+
+        }
+
+        private int CalculateChilrenEnd(int period, Message message, double amount)
+        {
+            int end = message.End;
+            if (period < message.End)
+            {
+               end = Rnd.GetRandomNumber(period + 1, message.End);
+            } else
+            {
+                end = period + Convert.ToInt32(Rnd.GetRandomNumber(100, 200) / 100 * amount);
+            }
+
+            return end;
+        }
+
+        private int CalculateDelegationParts(Message message, int maxParts)
+        {
+            int parts = maxParts;
+            if (message.Amount < maxParts) {
+                parts = 1;
+            }
+
+            return parts;
+
+        }
+
         /// <summary>
         /// Set mesasge status to Accepted, Discarded, Delegated
         /// </summary>
@@ -167,22 +210,16 @@ namespace Agents.Model
             // acceptmessage with a probability of 95%
             if (Rnd.GetRandomBool(95))
             {
-                if (Agents.Count == 0)
+                // !!!!!!!!!! Delegate with probability of 80%
+                if (Agents.Count > 0 && Rnd.GetRandomBool(80))
                 {
-                    message.Status = Status.Accepted;
+                    message.Status = Status.Delegated;
                 }
                 else
                 {
-                    // Delegate with probability of 80%
-                    if (Rnd.GetRandomBool(0))
-                    {
-                        message.Status = Status.Delegated;
-                    }
-                    else
-                    {
-                        message.Status = Status.Accepted;
-                    }
+                    message.Status = Status.Accepted;
                 }
+                
             } else
             {
                 message.Status = Status.Discarded;

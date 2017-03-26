@@ -61,7 +61,7 @@ namespace Agents.Model
 
         public List<Message> Children = new List<Message>();
 
-        public Message(Actor sender, Actor receiver, double importance, int create, int end, int amount)
+        public Message(Actor sender, Actor receiver, double importance, int create, int end, double amount)
         {
             Sender = sender;
             Receiver = receiver;
@@ -71,7 +71,7 @@ namespace Agents.Model
             Amount = amount;
         }
 
-        public Message(Actor receiver, double importance, int create, int end, int amount)
+        public Message(Actor receiver, double importance, int create, int end, double amount)
         {
             Receiver = receiver;
             Importance = importance;
