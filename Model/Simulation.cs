@@ -16,7 +16,14 @@ namespace Agents.Model
 
         public List<Relationship> Relationships = new List<Relationship>();
 
-        public string LogFile = @"D:\C#_projects\Agents\Agents\1.csv";
+        public int amountPer = 55;
+
+        public int minAmount = 10;
+
+        public int maxAmount = 10;
+
+        public string LogFile = @"D:\C#_projects\Agents\Agents\Logs\" + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + ".csv";
+
 
         public Simulation(int actors, int messages = 5)
         {
@@ -57,12 +64,12 @@ namespace Agents.Model
                 }
             }
 
-            for (int i = 0; i < messages; i++)
+            /*for (int i = 0; i < messages; i++)
             {
                 Actor Principal = Actors.PickRandomActor(1);
                 Actor Agent = Actors.PickRandomAgent(Principal);
                 Messages.Add(Message.CreateRandom(Principal, Agent));
-            }
+            }*/
 
             File.WriteAllText(LogFile, String.Empty);
             string log = Log.SimulationMessageInfoCSV();
@@ -72,12 +79,32 @@ namespace Agents.Model
 
         public void ProcessPeriod(int period)
         {
+            GenerateExternal(period);
             string log = Log.SimulationMessageInfoCSV(this);
             AddToLog(log);
             foreach (Actor Actor in Actors)
             {
                 Actor.ProcessPeriod(period, Messages);
             }
+        }
+
+        private void GenerateExternal(int period)
+        {
+            int currentAmount = amountPer;
+
+            while (currentAmount > 0)
+            {
+                int msgAmount = Rnd.GetRandomNumber(minAmount, maxAmount);
+                currentAmount -= msgAmount;
+
+                if (currentAmount > 0)
+                {
+                    Actor Principal = Actors.PickRandomActor(1);
+                    Actor Agent = Actors.PickRandomAgent(Principal);
+                    Messages.Add(Message.CreateRandom(Principal, Agent, currentAmount));
+                }
+            }
+            
         }
 
         public void ProcessSimulation(int period)

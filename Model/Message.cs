@@ -90,6 +90,15 @@ namespace Agents.Model
             return Message;
         }
 
+
+        public static Message CreateRandom(Actor sender, Actor receiver, int amount, int create = 0)
+        {
+            double importance = Rnd.GetRandomNumber(100) / 100;
+            int end = create + amount + Rnd.GetRandomNumber(10);
+            Message Message = new Message(sender, receiver, importance, create, end, amount);
+            return Message;
+        }
+
         public bool IsDelegatedCompleted()
         {
             return Children.All(message => (message.Status == Status.Completed) || (message.Status == Status.Discarded));

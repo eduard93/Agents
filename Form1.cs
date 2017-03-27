@@ -40,7 +40,7 @@ namespace Agents
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Simulation.ProcessSimulation(10);
+            Simulation.ProcessSimulation((int)numericUpDown2.Value);
             textBox1.AppendText(Log.SimulationMessageInfo(Simulation));
         }
     }
